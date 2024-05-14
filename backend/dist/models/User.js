@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import validator from "validator";
-;
 const userSchema = new mongoose.Schema({
     _id: {
         type: String,
@@ -45,12 +44,13 @@ userSchema.virtual("age").get(function () {
     const today = new Date();
     const dob = this.dob;
     let age = today.getFullYear() - dob.getFullYear();
-    // condition which checks if user's birth month is greater than current month 
-    // then user is not completed his age for this year and if both current and 
-    // DOB month is same than same will be checked for days for current month  
-    if (today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
+    // condition which checks if user's birth month is greater than current month
+    // then user is not completed his age for this year and if both current and
+    // DOB month is same than same will be checked for days for current month
+    if (today.getMonth() < dob.getMonth() ||
+        (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
         age--;
     }
     return age;
 });
-export const User = mongoose.model('User', userSchema);
+export const User = mongoose.model("User", userSchema);

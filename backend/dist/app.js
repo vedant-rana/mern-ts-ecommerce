@@ -11,11 +11,15 @@ connectMongoDB();
  * importing Routes for accessing routes functions
  */
 import userRoutes from "./routes/userRoutes.js";
-import { RouteStrings } from "./utils/RouteStrings.js";
+import productRoutes from "./routes/productRoute.js";
+import { RouteStrings } from "./utils/routeStrings.js";
 import { connectMongoDB } from "./utils/databaseConnection.js";
 import { errorMiddleware } from "./middlewares/errorsMiddleware.js";
 //routes with endpoints
 app.use(RouteStrings.USER_BASE_URL, userRoutes);
+app.use(RouteStrings.PRODUCT_BASE_URL, productRoutes);
+//making uploads folder available to users as static
+app.use("/uploads", express.static("uploads"));
 //Error handling Middleware
 app.use(errorMiddleware);
 /**
