@@ -17,4 +17,5 @@ export class RouteStrings {
   public static readonly SINGLE_PRODUCT_ID: string = "/:id";
   public static readonly LATEST_PRODUCTS: string = "/latest";
   public static readonly PRODUCT_CATEGORIES: string = "/categories";
+  public static readonly ALL_PRODUCTS: string = "/all";
 }

@@ -1,7 +1,7 @@
 import express from "express";
 import { RouteStrings } from "../utils/routeStrings.js";
 import { singleUpload } from "../middlewares/multer.js";
-import { deleteProduct, getAdminProducts, getAllCategories, getLatestProducts, getSingleProduct, newProduct, updateProductById, } from "../controllers/productController.js";
+import { deleteProduct, getAdminProducts, getAllCategories, getAllProducts, getLatestProducts, getSingleProduct, newProduct, updateProductById, } from "../controllers/productController.js";
 import { adminOnly } from "../middlewares/auth.js";
 const router = express.Router();
 /**
@@ -15,9 +15,15 @@ router
 /**
  * @purpose get all admin product details
  * @method GET
- * @route /api/v1/products/all
+ * @route /api/v1/products/admin-products
  */
 router.route(RouteStrings.ADMIN_PRODUCT).get(adminOnly, getAdminProducts);
+/**
+ * @purpose get all product details with filter and search
+ * @method GET
+ * @route /api/v1/products/all
+ */
+router.route(RouteStrings.ALL_PRODUCTS).get(getAllProducts);
 /**
  * @purpose get latest products
  * @method GET

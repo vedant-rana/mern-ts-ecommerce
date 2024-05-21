@@ -9,7 +9,12 @@ const app = express();
 app.use(express.json());
 
 //Mongodb connection function
+import { connectMongoDB } from "./utils/databaseConnection.js";
 connectMongoDB();
+
+//Applying caching in api using node-cache module
+import NodeCache from "node-cache";
+export const appCache = new NodeCache();
 
 /**
  * importing Routes for accessing routes functions
@@ -17,8 +22,6 @@ connectMongoDB();
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoute.js";
 import { RouteStrings } from "./utils/routeStrings.js";
-import { connectMongoDB } from "./utils/databaseConnection.js";
-import { errorMiddleware } from "./middlewares/errorsMiddleware.js";
 
 //routes with endpoints
 app.use(RouteStrings.USER_BASE_URL, userRoutes);
@@ -28,6 +31,7 @@ app.use(RouteStrings.PRODUCT_BASE_URL, productRoutes);
 app.use("/uploads", express.static("uploads"));
 
 //Error handling Middleware
+import { errorMiddleware } from "./middlewares/errorsMiddleware.js";
 app.use(errorMiddleware);
 
 /**

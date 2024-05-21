@@ -22,3 +22,28 @@ export interface NewProductRequestBody {
   stock: number;
   category: string;
 }
+
+export type SearchRequestQueryType = {
+  search?: string;
+  price?: string;
+  category?: string;
+  sort?: string;
+  page?: string;
+};
+
+export interface BaseQueryType {
+  name?: {
+    $regex: string;
+    $options: string;
+  };
+  price?: {
+    $lte: number;
+  };
+  category?: string;
+}
+
+export type InavlidateCacheType = {
+  product?: boolean;
+  order?: boolean;
+  admin?: boolean;
+};

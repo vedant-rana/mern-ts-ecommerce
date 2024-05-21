@@ -17,3 +17,4 @@ RouteStrings.ADMIN_PRODUCT = "/admin-products";
 RouteStrings.SINGLE_PRODUCT_ID = "/:id";
 RouteStrings.LATEST_PRODUCTS = "/latest";
 RouteStrings.PRODUCT_CATEGORIES = "/categories";
+RouteStrings.ALL_PRODUCTS = "/all";
