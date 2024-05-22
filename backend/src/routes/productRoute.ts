@@ -1,5 +1,5 @@
 import express from "express";
-import { RouteStrings } from "../utils/routeStrings.js";
+import { RouteStrings } from "../utils/stringConstants/routeStrings.js";
 import { singleUpload } from "../middlewares/multer.js";
 import {
   deleteProduct,

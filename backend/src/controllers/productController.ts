@@ -9,7 +9,7 @@ import { Product } from "../models/product.js";
 import ErrorHandler from "../utils/customError.js";
 import { rm } from "fs";
 import { appCache } from "../app.js";
-import { CacheNameStrings } from "../utils/cacheNameStrings.js";
+import { CacheNameStrings } from "../utils/stringConstants/cacheNameStrings.js";
 import app from "../routes/userRoutes.js";
 import { revalidateCache } from "../utils/revalidateCache.js";
 

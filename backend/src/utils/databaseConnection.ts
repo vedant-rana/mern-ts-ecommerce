@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-export const connectMongoDB = () => {
+export const connectMongoDB = (uri: string) => {
   mongoose
-    .connect("mongodb://localhost:27017", {
+    .connect(uri, {
       dbName: "mern-ts-ecommerce",
     })
     .then((data) => {

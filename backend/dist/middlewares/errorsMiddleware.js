@@ -10,6 +10,9 @@
 export const errorMiddleware = (err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.message = err.message || "Internal Server Error";
+    // customizing cast error occuring due to inavallid id of mongodb document
+    if (err.name === "CastError")
+        err.message = "Invalid Id";
     return res.status(err.statusCode).json({
         success: true,
         message: err.message,

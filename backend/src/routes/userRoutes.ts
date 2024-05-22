@@ -6,7 +6,7 @@ import {
   registerUser,
 } from "../controllers/userController.js";
 import { adminOnly } from "../middlewares/auth.js";
-import { RouteStrings } from "../utils/routeStrings.js";
+import { RouteStrings } from "../utils/stringConstants/routeStrings.js";
 
 const app = express.Router();
 

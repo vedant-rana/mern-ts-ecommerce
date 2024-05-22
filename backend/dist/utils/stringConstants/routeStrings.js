@@ -21,3 +21,6 @@ RouteStrings.PRODUCT_CATEGORIES = "/categories";
 RouteStrings.ALL_PRODUCTS = "/all";
 //ORDER ENDPOINTS
 RouteStrings.NEW_ORDER = "/new";
+RouteStrings.MY_ORDERS = "/my";
+RouteStrings.ALL_ORDERS = "/all";
+RouteStrings.SINGLE_ORDER_ID = "/:id";

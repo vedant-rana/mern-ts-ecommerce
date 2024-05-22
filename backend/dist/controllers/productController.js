@@ -3,7 +3,7 @@ import { Product } from "../models/product.js";
 import ErrorHandler from "../utils/customError.js";
 import { rm } from "fs";
 import { appCache } from "../app.js";
-import { CacheNameStrings } from "../utils/cacheNameStrings.js";
+import { CacheNameStrings } from "../utils/stringConstants/cacheNameStrings.js";
 import { revalidateCache } from "../utils/revalidateCache.js";
 /**
  * @purpose to get latest product as per created at field
