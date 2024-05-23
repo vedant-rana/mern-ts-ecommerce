@@ -6,6 +6,8 @@ export class RouteStrings {
   public static readonly USER_BASE_URL: string = `${this.MAIN_BASE_URL}/users`;
   public static readonly PRODUCT_BASE_URL: string = `${this.MAIN_BASE_URL}/products`;
   public static readonly ORDER_BASE_URL: string = `${this.MAIN_BASE_URL}/orders`;
+  public static readonly PAYMENT_BASE_URL: string = `${this.MAIN_BASE_URL}/payments`;
+  public static readonly DASHBOARD_BASE_URL: string = `${this.MAIN_BASE_URL}/dashboard`;
 
   //USER ENDPOINTS
   public static readonly NEW_USER: string = "/new";
@@ -25,4 +27,16 @@ export class RouteStrings {
   public static readonly MY_ORDERS: string = "/my";
   public static readonly ALL_ORDERS: string = "/all";
   public static readonly SINGLE_ORDER_ID: string = "/:id";
+
+  //COUPON ENDPOINTS
+  public static readonly NEW_COUPON: string = "/coupon/new";
+  public static readonly ALL_COUPON: string = "/coupon/all";
+  public static readonly SINGLE_COUPON_ID: string = "/coupon/:id";
+  public static readonly DISCOUNT: string = "/discount";
+
+  //DASHBOARD ENDPOINTS
+  public static readonly DASHBOARD_STATS: string = "/stats";
+  public static readonly DASHBOARD_PIE: string = "/pie";
+  public static readonly DASHBOARD_BAR: string = "/bar";
+  public static readonly DASHBOARD_LINE: string = "/line";
 }

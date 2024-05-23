@@ -8,4 +8,7 @@ export class CacheNameStrings {
   public static readonly MY_ORDERS: string = "my-orders";
   public static readonly ALL_ORDERS: string = "all-orders";
   public static readonly SINGLE_ORDER: string = "order";
+
+  //Dashboard Cache
+  public static readonly ADMIN_STATS: string = "admin-stats";
 }

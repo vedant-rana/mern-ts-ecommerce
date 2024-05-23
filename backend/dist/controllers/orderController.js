@@ -103,7 +103,7 @@ export const newOrder = TryCatch(async (req, res, next) => {
     if (!shippingInfo || !orderItems || !user || !subtotal || !tax || !total) {
         return next(new ErrorHandler("All fields are required", 400));
     }
-    await Order.create({
+    const order = await Order.create({
         shippingInfo,
         orderItems,
         user,
@@ -122,6 +122,7 @@ export const newOrder = TryCatch(async (req, res, next) => {
         order: true,
         admin: true,
         userId: user,
+        productId: order.orderItems.map((item) => String(item.productId)),
     });
     return res.status(201).json({
         success: true,

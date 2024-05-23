@@ -72,6 +72,8 @@ export const getSingleProduct = TryCatch(async (req, res, next) => {
     }
     else {
         product = await Product.findById(id);
+        if (!product)
+            return next(new ErrorHandler(`Product not found`, 404));
         appCache.set(`${CacheNameStrings.SINGLE_PRODUCT}-${id}`, JSON.stringify(product));
     }
     return res.status(200).json({
@@ -135,7 +137,7 @@ export const deleteProduct = TryCatch(async (req, res, next) => {
     if (!result)
         return next(new ErrorHandler("Failed to delete product", 500));
     // delete all cached products from the cache memory because product is deleted
-    await revalidateCache({ product: true });
+    await revalidateCache({ product: true, productId: String(product._id) });
     return res.status(200).json({
         success: true,
         message: "Product deleted successfully",
@@ -174,7 +176,7 @@ export const updateProductById = TryCatch(async (req, res, next) => {
         product.price = price;
     await product.save();
     // delete all cached products from the cache memory because new product is updated
-    await revalidateCache({ product: true });
+    await revalidateCache({ product: true, productId: String(product._id) });
     return res.status(200).json({
         success: true,
         message: "Product updated successfully",

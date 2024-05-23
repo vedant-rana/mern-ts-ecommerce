@@ -29,10 +29,14 @@ import { RouteStrings } from "./utils/stringConstants/routeStrings.js";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoute.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 //routes with endpoints
 app.use(RouteStrings.USER_BASE_URL, userRoutes);
 app.use(RouteStrings.PRODUCT_BASE_URL, productRoutes);
 app.use(RouteStrings.ORDER_BASE_URL, orderRoutes);
+app.use(RouteStrings.PAYMENT_BASE_URL, paymentRoutes);
+app.use(RouteStrings.DASHBOARD_BASE_URL, dashboardRoutes);
 //making uploads folder available to users as static
 app.use("/uploads", express.static("uploads"));
 //Error handling Middleware

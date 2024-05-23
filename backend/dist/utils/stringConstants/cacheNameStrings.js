@@ -8,3 +8,5 @@ CacheNameStrings.SINGLE_PRODUCT = "product";
 CacheNameStrings.MY_ORDERS = "my-orders";
 CacheNameStrings.ALL_ORDERS = "all-orders";
 CacheNameStrings.SINGLE_ORDER = "order";
+//Dashboard Cache
+CacheNameStrings.ADMIN_STATS = "admin-stats";
