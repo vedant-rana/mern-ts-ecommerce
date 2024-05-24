@@ -10,3 +10,6 @@ CacheNameStrings.ALL_ORDERS = "all-orders";
 CacheNameStrings.SINGLE_ORDER = "order";
 //Dashboard Cache
 CacheNameStrings.ADMIN_STATS = "admin-stats";
+CacheNameStrings.PIE_CHARTS = "admin-pie-charts";
+CacheNameStrings.LINE_CHARTS = "admin-line-charts";
+CacheNameStrings.BAR_CHARTS = "admin-bar-charts";

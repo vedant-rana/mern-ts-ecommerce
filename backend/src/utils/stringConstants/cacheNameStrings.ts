@@ -11,4 +11,7 @@ export class CacheNameStrings {
 
   //Dashboard Cache
   public static readonly ADMIN_STATS: string = "admin-stats";
+  public static readonly PIE_CHARTS: string = "admin-pie-charts";
+  public static readonly LINE_CHARTS: string = "admin-line-charts";
+  public static readonly BAR_CHARTS: string = "admin-bar-charts";
 }
