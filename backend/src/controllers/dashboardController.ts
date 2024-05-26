@@ -358,19 +358,19 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
         $gte: sixMonthsAgo,
         $lte: today,
       },
-    });
+    }).select("createdAt");
     const lastSixMonthsUsersPromise = User.find({
       createdAt: {
         $gte: sixMonthsAgo,
         $lte: today,
       },
-    });
+    }).select("createdAt");
     const lastTwelveMonthsOrdersPromise = Order.find({
       createdAt: {
         $gte: twelveMonthsAgo,
         $lte: today,
       },
-    });
+    }).select("createdAt");
 
     const [lastSixMonthsProducts, lastSixMonthsUsers, lastTwelveMonthsOrders] =
       await Promise.all([
@@ -396,7 +396,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
     });
     barCharts = {
       users: usersCount,
-      product: productsCount,
+      products: productsCount,
       orders: ordersCount,
     };
 
@@ -410,7 +410,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
 });
 
 /**
- * @purpose to get all orders of user
+ * @purpose to get line charts data
  *
  * @param req http request
  * @param res http response
@@ -418,4 +418,67 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
  *
  * @return void
  */
-export const getLineCharts = TryCatch(async () => {});
+export const getLineCharts = TryCatch(async (req, res, next) => {
+  let barCharts;
+
+  if (appCache.has(CacheNameStrings.LINE_CHARTS)) {
+    barCharts = JSON.parse(
+      appCache.get(CacheNameStrings.LINE_CHARTS) as string
+    );
+  } else {
+    const today = new Date();
+
+    const twelveMonthsAgo = new Date();
+    twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+
+    const baseQuery = {
+      createdAt: {
+        $gte: twelveMonthsAgo,
+        $lte: today,
+      },
+    };
+
+    const [lastSixMonthsProducts, lastSixMonthsUsers, lastTwelveMonthsOrders] =
+      await Promise.all([
+        Product.find(baseQuery).select("createdAt"),
+        User.find(baseQuery).select("createdAt"),
+        Order.find(baseQuery).select(["createdAt", "discount", "total"]),
+      ]);
+
+    const productsCount = lastMonthsData({
+      length: 12,
+      today,
+      docArr: lastSixMonthsProducts,
+    });
+    const usersCount = lastMonthsData({
+      length: 12,
+      today,
+      docArr: lastSixMonthsUsers,
+    });
+    const discountCount = lastMonthsData({
+      length: 12,
+      today,
+      docArr: lastTwelveMonthsOrders,
+      property: "discount",
+    });
+    const revenueCount = lastMonthsData({
+      length: 12,
+      today,
+      docArr: lastTwelveMonthsOrders,
+      property: "total",
+    });
+    barCharts = {
+      users: usersCount,
+      products: productsCount,
+      discount: discountCount,
+      revenue: revenueCount,
+    };
+
+    appCache.set(CacheNameStrings.LINE_CHARTS, JSON.stringify(barCharts));
+  }
+
+  return res.status(200).json({
+    success: true,
+    charts: barCharts,
+  });
+});

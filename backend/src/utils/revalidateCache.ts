@@ -1,10 +1,8 @@
 import { appCache } from "../app.js";
-import { Order } from "../models/order.js";
-import { Product } from "../models/product.js";
 import { InavlidateCacheType } from "../types/types.js";
 import { CacheNameStrings } from "./stringConstants/cacheNameStrings.js";
 
-export const revalidateCache = async ({
+export const revalidateCache = ({
   product,
   order,
   admin,
@@ -41,6 +39,11 @@ export const revalidateCache = async ({
     appCache.del(orderKeys);
   }
   if (admin) {
-    console.log("admin cache revalidated");
+    appCache.del([
+      CacheNameStrings.ADMIN_STATS,
+      CacheNameStrings.PIE_CHARTS,
+      CacheNameStrings.LINE_CHARTS,
+      CacheNameStrings.BAR_CHARTS,
+    ]);
   }
 };

@@ -39,4 +39,7 @@ export class RouteStrings {
   public static readonly DASHBOARD_PIE: string = "/pie";
   public static readonly DASHBOARD_BAR: string = "/bar";
   public static readonly DASHBOARD_LINE: string = "/line";
+
+  //PAYMENT ENDPOINTS
+  public static readonly STRIPE_PAYMENT: string = "/create";
 }

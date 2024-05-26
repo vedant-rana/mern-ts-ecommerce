@@ -36,3 +36,5 @@ RouteStrings.DASHBOARD_STATS = "/stats";
 RouteStrings.DASHBOARD_PIE = "/pie";
 RouteStrings.DASHBOARD_BAR = "/bar";
 RouteStrings.DASHBOARD_LINE = "/line";
+//PAYMENT ENDPOINTS
+RouteStrings.STRIPE_PAYMENT = "/create";

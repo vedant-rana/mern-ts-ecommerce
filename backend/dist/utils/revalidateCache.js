@@ -1,6 +1,6 @@
 import { appCache } from "../app.js";
 import { CacheNameStrings } from "./stringConstants/cacheNameStrings.js";
-export const revalidateCache = async ({ product, order, admin, userId, orderId, productId, }) => {
+export const revalidateCache = ({ product, order, admin, userId, orderId, productId, }) => {
     if (product) {
         const productKeys = [
             CacheNameStrings.ADMIN_PRODUCTS,
@@ -26,6 +26,11 @@ export const revalidateCache = async ({ product, order, admin, userId, orderId, 
         appCache.del(orderKeys);
     }
     if (admin) {
-        console.log("admin cache revalidated");
+        appCache.del([
+            CacheNameStrings.ADMIN_STATS,
+            CacheNameStrings.PIE_CHARTS,
+            CacheNameStrings.LINE_CHARTS,
+            CacheNameStrings.BAR_CHARTS,
+        ]);
     }
 };

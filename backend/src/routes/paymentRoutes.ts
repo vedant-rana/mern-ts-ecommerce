@@ -2,12 +2,20 @@ import express from "express";
 import { RouteStrings } from "../utils/stringConstants/routeStrings.js";
 import {
   applyDiscount,
+  createPaymentIntent,
   deleteCoupon,
   getAllCoupons,
   newCoupon,
 } from "../controllers/paymentController.js";
 import { adminOnly } from "../middlewares/auth.js";
 const router = express.Router();
+
+/**
+ * @purpose Create new Discount Coupon
+ * @method POST
+ * @route /api/v1/payments/create
+ */
+router.route(RouteStrings.STRIPE_PAYMENT).post(createPaymentIntent);
 
 /**
  * @purpose Create new Discount Coupon

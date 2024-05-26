@@ -1,7 +1,33 @@
+import { stripe } from "../app.js";
 import { TryCatch } from "../middlewares/errorsMiddleware.js";
 import { Coupon } from "../models/coupon.js";
 import ErrorHandler from "../utils/customError.js";
 
+/**
+ * @purpose to create payment methods with stripe
+ *
+ * @param req http request
+ * @param res http response
+ * @param next next function
+ *
+ * @return void
+ */
+export const createPaymentIntent = TryCatch(async (req, res, next) => {
+  const { amount } = req.body;
+  if (!amount) {
+    return next(new ErrorHandler("Please enter amount", 400));
+  }
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: Number(amount) * 100,
+    currency: "inr",
+  });
+
+  res.status(201).json({
+    success: true,
+    clientSecret: paymentIntent.client_secret,
+  });
+});
 /**
  * @purpose to create coupon with code and amount
  *

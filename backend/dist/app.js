@@ -1,13 +1,5 @@
 import express from "express";
 import morgan from "morgan";
-//Initializing express app
-const app = express();
-/**
- * middlewares
- */
-app.use(express.json());
-//morgan will log the request to the server on console
-app.use(morgan("dev"));
 // configuriing env for app
 import { config } from "dotenv";
 config({
@@ -16,12 +8,23 @@ config({
 //accessing environment variables for app
 const PORT = process.env.PORT || 4000;
 const MONGODB_URI = process.env.MONGODB_URI || "";
+const STRIPE_KEY = process.env.STRIPE_KEY || "";
+//configuring stripe client
+export const stripe = new Stripe(STRIPE_KEY);
 //Mongodb connection function
 import { connectMongoDB } from "./utils/databaseConnection.js";
 connectMongoDB(MONGODB_URI);
 //Applying caching in api using node-cache module
 import NodeCache from "node-cache";
 export const appCache = new NodeCache();
+//Initializing express app
+const app = express();
+/**
+ * middlewares
+ */
+app.use(express.json());
+//morgan will log the request to the server on console
+app.use(morgan("dev"));
 /**
  * importing Routes for accessing routes functions
  */
@@ -41,6 +44,7 @@ app.use(RouteStrings.DASHBOARD_BASE_URL, dashboardRoutes);
 app.use("/uploads", express.static("uploads"));
 //Error handling Middleware
 import { errorMiddleware } from "./middlewares/errorsMiddleware.js";
+import Stripe from "stripe";
 app.use(errorMiddleware);
 /**
  * PORT and Server configuration

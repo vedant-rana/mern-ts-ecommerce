@@ -106,7 +106,7 @@ export const newProduct = TryCatch(async (req, res, next) => {
         photo: productImage?.path,
     });
     // delete all cached products from the cache memory because new product is added
-    await revalidateCache({ product: true });
+    revalidateCache({ product: true, admin: true });
     if (!newProduct)
         return next(new ErrorHandler("Product creation failed, try again", 500));
     return res.status(201).json({
@@ -137,7 +137,11 @@ export const deleteProduct = TryCatch(async (req, res, next) => {
     if (!result)
         return next(new ErrorHandler("Failed to delete product", 500));
     // delete all cached products from the cache memory because product is deleted
-    await revalidateCache({ product: true, productId: String(product._id) });
+    revalidateCache({
+        product: true,
+        productId: String(product._id),
+        admin: true,
+    });
     return res.status(200).json({
         success: true,
         message: "Product deleted successfully",
@@ -176,7 +180,11 @@ export const updateProductById = TryCatch(async (req, res, next) => {
         product.price = price;
     await product.save();
     // delete all cached products from the cache memory because new product is updated
-    await revalidateCache({ product: true, productId: String(product._id) });
+    revalidateCache({
+        product: true,
+        productId: String(product._id),
+        admin: true,
+    });
     return res.status(200).json({
         success: true,
         message: "Product updated successfully",
