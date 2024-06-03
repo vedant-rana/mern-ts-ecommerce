@@ -23,9 +23,13 @@ const TransactionManagement = lazy(
 );
 // admin Imports completed
 
-const Search = lazy(() => import("./pages/Search"));
+const Login = lazy(() => import("./pages/Login"));
 const Home = lazy(() => import("./pages/Home"));
+const Search = lazy(() => import("./pages/Search"));
 const Cart = lazy(() => import("./pages/Cart"));
+const Shipping = lazy(() => import("./pages/Shipping"));
+const Orders = lazy(() => import("./pages/Orders"));
+const OrderDetails = lazy(() => import("./pages/OrderDetails"));
 
 const App = () => {
   return (
@@ -36,6 +40,14 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/cart" element={<Cart />} />
+          {/* Not Logged In Routes  */}
+          <Route path="/login" element={<Login />} />
+          {/* Logged in user routes */}
+          <Route>
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/shipping" element={<Shipping />} />
+            <Route path="/order/:id" element={<OrderDetails />} />
+          </Route>
           {/* <Route path="*" element={<NotFound />} /> */}
           {/* Admin Dashboard Routes  */}
           <Route

@@ -22,7 +22,7 @@ const Header = () => {
   return (
     <nav className="header">
       <Link onClick={() => setIsDialogOpen(false)} to={"/"}>
-        Home
+        HOME
       </Link>
       <Link onClick={() => setIsDialogOpen(false)} to={"/search"}>
         <FaSearch />

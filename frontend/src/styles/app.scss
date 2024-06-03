@@ -36,6 +36,10 @@ $color3: rgb(0, 104, 136);
 @import "admin-styles/mixin";
 //home page styles
 @import "home";
+@import "cart";
+@import "shipping";
+@import "login";
+@import "search";
 
 // Admin styles imported from here
 @import "admin-styles/dashboard";
