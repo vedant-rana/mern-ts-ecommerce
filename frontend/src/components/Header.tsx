@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   FaSearch,
   FaShoppingBag,
@@ -8,39 +9,54 @@ import {
 import { Link } from "react-router-dom";
 
 const user = {
-  _id: "",
+  _id: "12",
   role: "admin",
 };
 const Header = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  const logOutHandler = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
-    <nav>
-      <Link to={"/"}>Home</Link>
-      <Link to={"/search"}>
+    <nav className="header">
+      <Link onClick={() => setIsDialogOpen(false)} to={"/"}>
+        Home
+      </Link>
+      <Link onClick={() => setIsDialogOpen(false)} to={"/search"}>
         <FaSearch />
       </Link>
-      <Link to={"/cart"}>
+      <Link onClick={() => setIsDialogOpen(false)} to={"/cart"}>
         <FaShoppingBag />
       </Link>
       {user._id ? (
         <>
-          <button>
+          <button onClick={() => setIsDialogOpen((prev) => !prev)}>
             <FaUser />
           </button>
-          <dialog>
+          <dialog open={isDialogOpen}>
             <div>
               {user.role === "admin" && (
-                <Link to="/admin/dashboard">Admin</Link>
+                <Link
+                  onClick={() => setIsDialogOpen(false)}
+                  to="/admin/dashboard"
+                >
+                  Admin
+                </Link>
               )}
 
-              <Link to="/orders">Orders</Link>
-              <button>
+              <Link onClick={() => setIsDialogOpen(false)} to="/orders">
+                Orders
+              </Link>
+              <button onClick={logOutHandler}>
                 <FaSignOutAlt />
               </button>
             </div>
           </dialog>
         </>
       ) : (
-        <Link to={"/login"}>
+        <Link onClick={() => setIsDialogOpen(false)} to={"/login"}>
           <FaSignInAlt />
         </Link>
       )}
