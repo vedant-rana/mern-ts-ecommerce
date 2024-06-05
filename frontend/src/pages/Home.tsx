@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import ProductCard from "../components/products/ProductCard";
 import { useLatestProductsQuery } from "../redux/api/productApi";
 import toast from "react-hot-toast";
-import Loader from "../components/Loader";
+import { SkelatonLoader } from "../components/Loader";
 
 const Home = () => {
   const addToCartHandler = () => {};
@@ -20,7 +20,7 @@ const Home = () => {
       </h1>
       <main>
         {isLoading ? (
-          <Loader />
+          <SkelatonLoader width="80vw" />
         ) : (
           data?.products.map((product, index) => (
             <ProductCard
