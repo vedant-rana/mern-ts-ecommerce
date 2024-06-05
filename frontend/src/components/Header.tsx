@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import {
   FaSearch,
   FaShoppingBag,
@@ -7,16 +8,30 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { IUser } from "../types/types";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
-const user = {
-  _id: "12",
-  role: "admin",
-};
-const Header = () => {
+// const user = {
+//   _id: "",
+//   role: "",
+// };
+
+interface HeaderPropType {
+  user: IUser | null;
+}
+
+const Header = ({ user }: HeaderPropType) => {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-  const logOutHandler = () => {
-    setIsDialogOpen(false);
+  const logOutHandler = async () => {
+    try {
+      await signOut(auth);
+      toast.success("Logged out Successfully");
+      setIsDialogOpen(false);
+    } catch (err) {
+      toast.error("Log out Failed");
+    }
   };
 
   return (
@@ -30,14 +45,14 @@ const Header = () => {
       <Link onClick={() => setIsDialogOpen(false)} to={"/cart"}>
         <FaShoppingBag />
       </Link>
-      {user._id ? (
+      {user?._id ? (
         <>
           <button onClick={() => setIsDialogOpen((prev) => !prev)}>
             <FaUser />
           </button>
           <dialog open={isDialogOpen}>
             <div>
-              {user.role === "admin" && (
+              {user?.role === "admin" && (
                 <Link
                   onClick={() => setIsDialogOpen(false)}
                   to="/admin/dashboard"

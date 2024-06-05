@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import cors from "cors";
 // configuriing env for app
 import { config } from "dotenv";
 config({
@@ -25,6 +26,8 @@ const app = express();
 app.use(express.json());
 //morgan will log the request to the server on console
 app.use(morgan("dev"));
+//configuring CORS
+app.use(cors());
 /**
  * importing Routes for accessing routes functions
  */
