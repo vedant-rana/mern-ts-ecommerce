@@ -1,16 +1,38 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
+import { useSelector } from "react-redux";
+import { UserReducerInitialState } from "../../../types/reducerTypes";
+import { useParams } from "react-router-dom";
+import { useProductDetailsQuery } from "../../../redux/api/productApi";
+import { server } from "../../../redux/store";
 
 const img =
   "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
 
 const Productmanagement = () => {
-  const [price, setPrice] = useState<number>(2000);
-  const [stock, setStock] = useState<number>(10);
-  const [name, setName] = useState<string>("Puma Shoes");
-  const [photo, setPhoto] = useState<string>(img);
-  const [category, setCategory] = useState<string>("footwear");
+  // getting id of admin from user state of redux which is required to create new product
+  const { user } = useSelector(
+    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+  );
+
+  const params = useParams();
+  const { data } = useProductDetailsQuery(params.id!);
+
+  const { name, price, stock, photo, category } = data?.product || {
+    _id: "",
+    name: "",
+    price: 0,
+    stock: 0,
+    photo: "",
+    category: "",
+  };
+
+  // const [price, setPrice] = useState<number>(2000);
+  // const [stock, setStock] = useState<number>(10);
+  // const [name, setName] = useState<string>("Puma Shoes");
+  // const [photo, setPhoto] = useState<string>(img);
+  // const [category, setCategory] = useState<string>("footwear");
 
   const [priceUpdate, setPriceUpdate] = useState<number>(price);
   const [stockUpdate, setStockUpdate] = useState<number>(stock);
@@ -37,19 +59,24 @@ const Productmanagement = () => {
 
   const submitHandler = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    setName(nameUpdate);
-    setPrice(priceUpdate);
-    setStock(stockUpdate);
-    setPhoto(photoUpdate);
   };
+
+  useEffect(() => {
+    if (data) {
+      setNameUpdate(data.product.name);
+      setPriceUpdate(data.product.price);
+      setStockUpdate(data.product.stock);
+      setCategoryUpdate(data.product.category);
+    }
+  }, [data]);
 
   return (
     <div className="admin-container">
       <AdminSidebar />
       <main className="product-management">
         <section>
-          <strong>ID - fsdfsfsggfgdf</strong>
-          <img src={photo} alt="Product" />
+          <strong>ID - {data?.product._id}</strong>
+          <img src={`${server}/${photo}`} alt="Product" />
           <p>{name}</p>
           {stock > 0 ? (
             <span className="green">{stock} Available</span>
