@@ -1,5 +1,6 @@
 import { FaPlus } from "react-icons/fa";
 import { server } from "../../redux/store";
+import { ICartItem } from "../../types/types";
 
 type ProductProps = {
   productId: string;
@@ -7,7 +8,7 @@ type ProductProps = {
   photo: string;
   price: number;
   stock: number;
-  handler: () => void;
+  handler: (cartItem: ICartItem) => string | undefined;
 };
 
 const ProductCard = ({
@@ -24,7 +25,18 @@ const ProductCard = ({
       <p>{name}</p>
       <span>₹ {price}</span>
       <div>
-        <button onClick={() => handler()}>
+        <button
+          onClick={() =>
+            handler({
+              productId,
+              name,
+              photo,
+              price,
+              stock,
+              quantity: 1,
+            })
+          }
+        >
           <FaPlus />
         </button>
       </div>

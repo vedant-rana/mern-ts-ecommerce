@@ -64,7 +64,9 @@ router.route(RouteStrings.SINGLE_PRODUCT_ID).get(getSingleProduct);
  * @method PUT
  * @route /api/v1/products/:id
  */
-router.route(RouteStrings.SINGLE_PRODUCT_ID).put(adminOnly, updateProductById);
+router
+  .route(RouteStrings.SINGLE_PRODUCT_ID)
+  .put(adminOnly, singleUpload, updateProductById);
 
 /**
  * @purpose delete a Product (admin only)

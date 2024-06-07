@@ -53,7 +53,9 @@ const NewProduct = () => {
     formData.set("price", price.toString());
     formData.set("stock", stock.toString());
     formData.set("photo", photo);
-
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
     const res = await newProduct({
       id: user?._id!,
       formData: formData,

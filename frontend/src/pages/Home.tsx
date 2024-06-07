@@ -3,12 +3,23 @@ import ProductCard from "../components/products/ProductCard";
 import { useLatestProductsQuery } from "../redux/api/productApi";
 import toast from "react-hot-toast";
 import { SkelatonLoader } from "../components/Loader";
+import { ICartItem } from "../types/types";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/reducer/cartReducer";
 
 const Home = () => {
-  const addToCartHandler = () => {};
   const { data, isLoading, isError } = useLatestProductsQuery("");
+  const dispatch = useDispatch();
+
+  const addToCartHandler = (cartItem: ICartItem) => {
+    if (cartItem.stock < 1) return toast.error("Out of Stock");
+
+    dispatch(addToCart(cartItem));
+    toast.success(`${cartItem.name} added to cart`);
+  };
 
   if (isError) toast.error("Failed to Load the Products");
+
   return (
     <div className="home">
       <section></section>
