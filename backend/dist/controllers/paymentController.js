@@ -16,9 +16,21 @@ export const createPaymentIntent = TryCatch(async (req, res, next) => {
     if (!amount) {
         return next(new ErrorHandler("Please enter amount", 400));
     }
+    const shipping = {
+        name: "Jenny Rosen",
+        address: {
+            line1: "510 Townsend St",
+            postal_code: "98140",
+            city: "San Francisco",
+            state: "CA",
+            country: "US",
+        },
+    };
     const paymentIntent = await stripe.paymentIntents.create({
         amount: Number(amount) * 100,
         currency: "inr",
+        description: "Software development services",
+        shipping,
     });
     res.status(201).json({
         success: true,

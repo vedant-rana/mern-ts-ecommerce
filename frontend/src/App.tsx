@@ -38,6 +38,8 @@ const Cart = lazy(() => import("./pages/Cart"));
 const Shipping = lazy(() => import("./pages/Shipping"));
 const Orders = lazy(() => import("./pages/Orders"));
 const OrderDetails = lazy(() => import("./pages/OrderDetails"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Checkout = lazy(() => import("./pages/Checkout"));
 
 const App = () => {
   const dispatch = useDispatch();
@@ -85,6 +87,7 @@ const App = () => {
             <Route path="/orders" element={<Orders />} />
             <Route path="/shipping" element={<Shipping />} />
             <Route path="/order/:id" element={<OrderDetails />} />
+            <Route path="/pay" element={<Checkout />} />
           </Route>
           {/* <Route path="*" element={<NotFound />} /> */}
           {/* Admin Dashboard Routes  */}
@@ -120,7 +123,7 @@ const App = () => {
               element={<TransactionManagement />}
             />
           </Route>
-          ;
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
       <Toaster position="bottom-center" />

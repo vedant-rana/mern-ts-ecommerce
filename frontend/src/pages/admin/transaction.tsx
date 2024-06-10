@@ -1,8 +1,14 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Column } from "react-table";
+import { SkelatonLoader } from "../../components/Loader";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
+import { useAllOrdersQuery } from "../../redux/api/orderApi";
+import { CustomError } from "../../types/apiTypes";
+import { UserReducerInitialState } from "../../types/reducerTypes";
 
 interface DataType {
   user: string;
@@ -13,33 +19,33 @@ interface DataType {
   action: ReactElement;
 }
 
-const arr: Array<DataType> = [
-  {
-    user: "Charas",
-    amount: 4500,
-    discount: 400,
-    status: <span className="red">Processing</span>,
-    quantity: 3,
-    action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
-  },
+// const arr: Array<DataType> = [
+//   {
+//     user: "Charas",
+//     amount: 4500,
+//     discount: 400,
+//     status: <span className="red">Processing</span>,
+//     quantity: 3,
+//     action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
+//   },
 
-  {
-    user: "Xavirors",
-    amount: 6999,
-    discount: 400,
-    status: <span className="green">Shipped</span>,
-    quantity: 6,
-    action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
-  },
-  {
-    user: "Xavirors",
-    amount: 6999,
-    discount: 400,
-    status: <span className="purple">Delivered</span>,
-    quantity: 6,
-    action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
-  },
-];
+//   {
+//     user: "Xavirors",
+//     amount: 6999,
+//     discount: 400,
+//     status: <span className="green">Shipped</span>,
+//     quantity: 6,
+//     action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
+//   },
+//   {
+//     user: "Xavirors",
+//     amount: 6999,
+//     discount: 400,
+//     status: <span className="purple">Delivered</span>,
+//     quantity: 6,
+//     action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
+//   },
+// ];
 
 const columns: Column<DataType>[] = [
   {
@@ -69,7 +75,41 @@ const columns: Column<DataType>[] = [
 ];
 
 const Transaction = () => {
-  const [rows, setRows] = useState<DataType[]>(arr);
+  const { user } = useSelector(
+    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+  );
+  const { isLoading, isError, error, data } = useAllOrdersQuery(user?._id!);
+
+  const [rows, setRows] = useState<DataType[]>([]);
+
+  if (isError) toast.error((error as CustomError).data.message);
+
+  useEffect(() => {
+    if (data) {
+      setRows(
+        data.orders.map((product) => ({
+          user: product.user.name,
+          amount: product.total,
+          discount: product.discount,
+          quantity: product.orderItems.length,
+          status: (
+            <span
+              className={
+                product.status === "Processing"
+                  ? "red"
+                  : product.status === "SHipped"
+                  ? "green"
+                  : "purple"
+              }
+            >
+              {product.status}
+            </span>
+          ),
+          action: <Link to={`/admin/transaction/${product._id}`}>Manage</Link>,
+        }))
+      );
+    }
+  }, [data]);
 
   const Table = TableHOC<DataType>(
     columns,
@@ -81,7 +121,7 @@ const Transaction = () => {
   return (
     <div className="admin-container">
       <AdminSidebar />
-      <main>{Table}</main>
+      <main>{isLoading ? <SkelatonLoader length={20} /> : Table}</main>
     </div>
   );
 };

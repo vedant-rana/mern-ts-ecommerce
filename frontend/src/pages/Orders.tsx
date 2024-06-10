@@ -1,7 +1,13 @@
-import { ReactElement, useState } from "react";
-import TableHOC from "../components/admin/TableHOC";
-import { Column } from "react-table";
+import { ReactElement, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { Column } from "react-table";
+import { SkelatonLoader } from "../components/Loader";
+import TableHOC from "../components/admin/TableHOC";
+import { useMyOrdersQuery } from "../redux/api/orderApi";
+import { CustomError } from "../types/apiTypes";
+import { UserReducerInitialState } from "../types/reducerTypes";
 
 type DataType = {
   _id: string;
@@ -20,81 +26,44 @@ const column: Column<DataType>[] = [
   { Header: "Status", accessor: "status" },
   { Header: "Action", accessor: "action" },
 ];
+
 const Orders = () => {
-  const [rows] = useState<DataType[]>([
-    {
-      _id: "temp1",
-      amount: 1000,
-      quantity: 1,
-      discount: 100,
-      status: <span className="red">Processing</span>,
-      action: <Link to={`/order/temp1`}>View</Link>,
-    },
-    {
-      _id: "temp1",
-      amount: 1000,
-      quantity: 1,
-      discount: 100,
-      status: <span className="red">Processing</span>,
-      action: <Link to={`/order/temp1`}>View</Link>,
-    },
-    {
-      _id: "temp1",
-      amount: 1000,
-      quantity: 1,
-      discount: 100,
-      status: <span className="red">Processing</span>,
-      action: <Link to={`/order/temp1`}>View</Link>,
-    },
-    {
-      _id: "temp1",
-      amount: 1000,
-      quantity: 1,
-      discount: 100,
-      status: <span className="red">Processing</span>,
-      action: <Link to={`/order/temp1`}>View</Link>,
-    },
-    {
-      _id: "temp1",
-      amount: 1000,
-      quantity: 1,
-      discount: 100,
-      status: <span className="red">Processing</span>,
-      action: <Link to={`/order/temp1`}>View</Link>,
-    },
-    {
-      _id: "temp1",
-      amount: 1000,
-      quantity: 1,
-      discount: 100,
-      status: <span className="red">Processing</span>,
-      action: <Link to={`/order/temp1`}>View</Link>,
-    },
-    {
-      _id: "temp1",
-      amount: 1000,
-      quantity: 1,
-      discount: 100,
-      status: <span className="red">Processing</span>,
-      action: <Link to={`/order/temp1`}>View</Link>,
-    },
-    {
-      _id: "temp1",
-      amount: 1000,
-      quantity: 1,
-      discount: 100,
-      status: <span className="red">Processing</span>,
-      action: <Link to={`/order/temp1`}>View</Link>,
-    },
-    {
-      _id: "temp1",
-      amount: 1000,
-      quantity: 1,
-      discount: 100,
-      status: <span className="red">Processing</span>,
-      action: <Link to={`/order/temp1`}>View</Link>,
-    },
-  ]);
+  const { user } = useSelector(
+    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+  );
+  const { isLoading, isError, error, data } = useMyOrdersQuery(user?._id!);
+
+  const [rows, setRows] = useState<DataType[]>([]);
+
+  if (isError) toast.error((error as CustomError).data.message);
+
+  useEffect(() => {
+    if (data) {
+      setRows(
+        data.orders.map((product) => ({
+          _id: product.user.name,
+          amount: product.total,
+          discount: product.discount,
+          quantity: product.orderItems.length,
+          status: (
+            <span
+              className={
+                product.status === "Processing"
+                  ? "red"
+                  : product.status === "SHipped"
+                  ? "green"
+                  : "purple"
+              }
+            >
+              {product.status}
+            </span>
+          ),
+          action: <Link to={`/admin/transaction/${product._id}`}>Manage</Link>,
+        }))
+      );
+    }
+  }, [data]);
+
   const Table = TableHOC<DataType>(
     column,
     rows,
@@ -102,10 +71,11 @@ const Orders = () => {
     "My Orders",
     rows.length > 6
   );
+
   return (
     <div className="container">
       <h1>My Orders</h1>
-      {<Table />}
+      {isLoading ? <SkelatonLoader length={20} /> : <Table />}
     </div>
   );
 };

@@ -7,8 +7,12 @@ import {
 import toast from "react-hot-toast";
 import { CustomError } from "../types/apiTypes";
 import { SkelatonLoader } from "../components/Loader";
+import { ICartItem } from "../types/types";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/reducer/cartReducer";
 
 const Search = () => {
+  const dispatch = useDispatch();
   const {
     data: CategoriesResponse,
     isLoading: loadingCategories,
@@ -37,7 +41,12 @@ const Search = () => {
   const isPrevPage = page > 1;
   const isNextPage = searchedData && page < searchedData.totalPage;
 
-  const addToCartHandler = () => {};
+  const addToCartHandler = (cartItem: ICartItem) => {
+    if (cartItem.stock < 1) return toast.error("Out of Stock");
+
+    dispatch(addToCart(cartItem));
+    toast.success(`${cartItem.name} added to cart`);
+  };
 
   if (categoryIsError || productIsError) {
     const err = (categoryError || productError) as CustomError;

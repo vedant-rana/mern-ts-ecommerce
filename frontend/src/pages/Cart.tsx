@@ -7,10 +7,13 @@ import { CartReducerInitialState } from "../types/reducerTypes";
 import { ICartItem } from "../types/types";
 import {
   addToCart,
+  applyDiscount,
   calculatePrice,
   removeCartItem,
 } from "../redux/reducer/cartReducer";
 import toast from "react-hot-toast";
+import axios from "axios";
+import { server } from "../redux/store";
 
 // const cartItems: any[] = [
 //   {
@@ -39,20 +42,32 @@ const Cart = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const { token: cancelToken, cancel } = axios.CancelToken.source();
     const timeOutId = setTimeout(() => {
-      if (Math.random() > 0.5) setIsValidCouponCode(true);
-      else setIsValidCouponCode(false);
+      axios
+        .get(`${server}/api/v1/payments/discount?couponCode=${couponCode}`, {
+          cancelToken,
+        })
+        .then((res) => {
+          dispatch(applyDiscount(res.data.discount));
+          setIsValidCouponCode(true);
+          dispatch(calculatePrice());
+        })
+        .catch((err) => {
+          dispatch(applyDiscount(0));
+          setIsValidCouponCode(false);
+          dispatch(calculatePrice());
+        });
     }, 1000);
 
     return () => {
       clearTimeout(timeOutId);
-      // setIsValidCouponCode(false);
+      cancel();
+      setIsValidCouponCode(false);
     };
   }, [couponCode]);
 
   useEffect(() => {
-    console.log("in the cart use effect");
-
     dispatch(calculatePrice());
   }, [cartItems, dispatch]);
 
@@ -61,10 +76,12 @@ const Cart = () => {
       return toast.error("Max Quantity Reached");
     dispatch(addToCart({ ...cartItem, quantity: cartItem.quantity + 1 }));
   };
+
   const decrementHandler = (cartItem: ICartItem) => {
     if (cartItem.quantity <= 1) return;
     dispatch(addToCart({ ...cartItem, quantity: cartItem.quantity - 1 }));
   };
+
   const removeHandler = (productId: string) => {
     dispatch(removeCartItem(productId));
   };

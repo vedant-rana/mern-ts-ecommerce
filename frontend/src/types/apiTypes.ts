@@ -1,4 +1,4 @@
-import { IProduct, IUser } from "./types";
+import { ICartItem, IOrder, IProduct, IUser, ShippingInfo } from "./types";
 
 export type CustomError = {
   status: number;
@@ -58,4 +58,30 @@ export type UpdateProductRequest = {
 export type DeleteProductRequest = {
   userId: string; // admin id
   productId: string; // admin product
+};
+
+export type NewOrderRequest = {
+  shippingInfo: ShippingInfo;
+  orderItems: ICartItem[];
+  subtotal: number;
+  tax: number;
+  shippingCharges: number;
+  discount: number;
+  total: number;
+  user: string;
+};
+
+export type UpdateOrderRequest = {
+  orderId: string;
+  userId: string;
+};
+
+export type AllOrdersResponse = {
+  success: boolean;
+  orders: IOrder[];
+};
+
+export type OrderDetailsResponse = {
+  success: boolean;
+  order: IOrder;
 };
