@@ -53,3 +53,63 @@ export type IOrder = {
   };
   _id: string;
 };
+
+//Dashboard and Admin stats and charts types started
+type CountAndChange = {
+  revenue: number;
+  product: number;
+  user: number;
+  order: number;
+};
+
+type LatestTransactions = {
+  _id: string;
+  discount: number;
+  amount: number;
+  quantity: number;
+  status: string;
+};
+
+export type IStat = {
+  categoryCount: Record<string, number>[];
+  changePercent: CountAndChange;
+  counts: CountAndChange;
+  chart: {
+    order: number[];
+    revenue: number[];
+  };
+  userRatio: {
+    male: number;
+    female: number;
+  };
+  latestTransactions: LatestTransactions[];
+};
+
+type RevenueDistribution = {
+  netMargin: number;
+  discount: number;
+  productionCost: number;
+  burnt: number;
+  marketingCost: number;
+};
+
+type OrderFullfillment = {
+  processing: number;
+  shipped: number;
+  delivered: number;
+};
+
+type UsersAgeGroup = { teen: number; adult: number; old: number };
+
+export type IPie = {
+  orderFullfillment: OrderFullfillment;
+  pouductCategories: Record<string, number>[];
+  stockAvailibility: {
+    inStock: number;
+    outOfStock: number;
+  };
+  revenueDistribution: RevenueDistribution;
+  adminUsers: number;
+  usersAgeGroup: UsersAgeGroup;
+  adminCustomers: { admin: number; customer: number };
+};

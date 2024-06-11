@@ -1,4 +1,12 @@
-import { ICartItem, IOrder, IProduct, IUser, ShippingInfo } from "./types";
+import {
+  ICartItem,
+  IOrder,
+  IPie,
+  IProduct,
+  IStat,
+  IUser,
+  ShippingInfo,
+} from "./types";
 
 export type CustomError = {
   status: number;
@@ -12,6 +20,12 @@ export type MessageResponse = {
   success: boolean;
   message: string;
 };
+
+export type AllUsersResponse = {
+  success: boolean;
+  users: IUser[];
+};
+
 export type UserResponse = {
   success: boolean;
   user: IUser;
@@ -36,6 +50,16 @@ export type SearchProductResponse = AllProductResponse & {
   totalPage: number;
 };
 
+export type StatsResponse = {
+  success: boolean;
+  stats: IStat;
+};
+
+export type PieResponse = {
+  success: boolean;
+  charts: IPie;
+};
+
 export type SearchProductRequest = {
   search: string;
   price: number;
@@ -58,6 +82,11 @@ export type UpdateProductRequest = {
 export type DeleteProductRequest = {
   userId: string; // admin id
   productId: string; // admin product
+};
+
+export type DeleteUserRequest = {
+  userId: string; // user id
+  adminUserId: string; // admin id
 };
 
 export type NewOrderRequest = {

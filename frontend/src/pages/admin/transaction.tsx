@@ -7,8 +7,8 @@ import { SkelatonLoader } from "../../components/Loader";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
 import { useAllOrdersQuery } from "../../redux/api/orderApi";
+import { RootState } from "../../redux/store";
 import { CustomError } from "../../types/apiTypes";
-import { UserReducerInitialState } from "../../types/reducerTypes";
 
 interface DataType {
   user: string;
@@ -75,9 +75,7 @@ const columns: Column<DataType>[] = [
 ];
 
 const Transaction = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const { user } = useSelector((state: RootState) => state.userReducer);
   const { isLoading, isError, error, data } = useAllOrdersQuery(user?._id!);
 
   const [rows, setRows] = useState<DataType[]>([]);
@@ -87,26 +85,29 @@ const Transaction = () => {
   useEffect(() => {
     if (data) {
       setRows(
-        data.orders.map((product) => ({
-          user: product.user.name,
-          amount: product.total,
-          discount: product.discount,
-          quantity: product.orderItems.length,
-          status: (
-            <span
-              className={
-                product.status === "Processing"
-                  ? "red"
-                  : product.status === "SHipped"
-                  ? "green"
-                  : "purple"
-              }
-            >
-              {product.status}
-            </span>
-          ),
-          action: <Link to={`/admin/transaction/${product._id}`}>Manage</Link>,
-        }))
+        data &&
+          data.orders.map((product) => ({
+            user: product.user?.name!,
+            amount: product.total,
+            discount: product.discount,
+            quantity: product.orderItems.length,
+            status: (
+              <span
+                className={
+                  product.status === "Processing"
+                    ? "red"
+                    : product.status === "SHipped"
+                    ? "green"
+                    : "purple"
+                }
+              >
+                {product.status}
+              </span>
+            ),
+            action: (
+              <Link to={`/admin/transaction/${product._id}`}>Manage</Link>
+            ),
+          }))
       );
     }
   }, [data]);

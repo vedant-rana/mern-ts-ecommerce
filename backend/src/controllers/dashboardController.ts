@@ -187,7 +187,7 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
         _id: transaction._id,
         discount: transaction.discount,
         amount: transaction.total,
-        orderItems: transaction.orderItems.length,
+        quantity: transaction.orderItems.length,
         status: transaction.status,
       })
     );

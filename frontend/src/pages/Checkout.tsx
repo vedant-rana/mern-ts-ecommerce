@@ -7,15 +7,35 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-const stripePromise = loadStripe(
-  "pk_test_51PKanxSAEfQVn1z1FMQAoUbKHGGGjXLMRZztzmGoZRpQtjN2Ouf7rjVoo6VGei1652oNt457OqmqCtadWpnHaL4i00OqubTf5r"
-);
+import { RootState } from "../redux/store";
+import { useNewOrderMutation } from "../redux/api/orderApi";
+import { resetCart } from "../redux/reducer/cartReducer";
+import { NewOrderRequest } from "../types/apiTypes";
+import { responseToast } from "../utils/features";
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state: RootState) => state.userReducer);
+
+  const {
+    shippingInfo,
+    cartItems,
+    subtotal,
+    tax,
+    discount,
+    shippingCharges,
+    total,
+  } = useSelector((state: RootState) => state.cartReducer);
+
+  const [newOrder] = useNewOrderMutation();
+
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
@@ -24,7 +44,16 @@ const CheckoutForm = () => {
     if (!stripe || !elements) return;
     setIsProcessing(true);
 
-    const order = {};
+    const order: NewOrderRequest = {
+      shippingInfo,
+      orderItems: cartItems,
+      subtotal,
+      tax,
+      discount,
+      shippingCharges,
+      total,
+      user: user?._id!,
+    };
 
     const { paymentIntent, error } = await stripe.confirmPayment({
       elements,
@@ -38,8 +67,9 @@ const CheckoutForm = () => {
     }
 
     if (paymentIntent.status === "succeeded") {
-      console.log("Placing Order");
-      navigate("/orders");
+      const res = await newOrder(order);
+      dispatch(resetCart());
+      responseToast(res, navigate, "/orders");
     }
     setIsProcessing(false);
   };
