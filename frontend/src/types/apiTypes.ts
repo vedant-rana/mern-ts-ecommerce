@@ -1,5 +1,9 @@
 import {
+  IBar,
   ICartItem,
+  ICategory,
+  ICoupon,
+  ILine,
   IOrder,
   IPie,
   IProduct,
@@ -36,6 +40,16 @@ export type AllProductResponse = {
   products: IProduct[];
 };
 
+export type AllCouponResponse = {
+  success: boolean;
+  coupons: ICoupon[];
+};
+
+export type AllCategoryResponse = {
+  success: boolean;
+  categories: ICategory[];
+};
+
 export type ProductResponse = {
   success: boolean;
   product: IProduct;
@@ -60,6 +74,16 @@ export type PieResponse = {
   charts: IPie;
 };
 
+export type BarResponse = {
+  success: boolean;
+  charts: IBar;
+};
+
+export type LineResponse = {
+  success: boolean;
+  charts: ILine;
+};
+
 export type SearchProductRequest = {
   search: string;
   price: number;
@@ -71,6 +95,11 @@ export type SearchProductRequest = {
 export type NewProductRequest = {
   id: string; // admin id
   formData: FormData;
+};
+
+export type NewCategoryRequest = {
+  name: string;
+  createdBy: string;
 };
 
 export type UpdateProductRequest = {
@@ -87,6 +116,16 @@ export type DeleteProductRequest = {
 export type DeleteUserRequest = {
   userId: string; // user id
   adminUserId: string; // admin id
+};
+
+export type DeleteCouponRequest = {
+  adminId: string; // admin id
+  couponId: string; // coupon id
+};
+
+export type DeleteCategoryRequest = {
+  adminId: string; // admin id
+  categoryId: string; // category id
 };
 
 export type NewOrderRequest = {

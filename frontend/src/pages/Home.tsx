@@ -6,6 +6,7 @@ import { SkelatonLoader } from "../components/Loader";
 import { ICartItem } from "../types/types";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/reducer/cartReducer";
+import HomeCarosel from "../components/HomeCarosel";
 
 const Home = () => {
   const { data, isLoading, isError } = useLatestProductsQuery("");
@@ -21,32 +22,35 @@ const Home = () => {
   if (isError) toast.error("Failed to Load the Products");
 
   return (
-    <div className="home">
-      <section></section>
-      <h1>
-        Latest Products
-        <Link to="/search" className="findmore">
-          More
-        </Link>
-      </h1>
-      <main>
-        {isLoading ? (
-          <SkelatonLoader width="80vw" />
-        ) : (
-          data?.products.map((product, index) => (
-            <ProductCard
-              key={index}
-              productId={product._id}
-              name={product.name}
-              price={product.price}
-              stock={product.stock}
-              handler={addToCartHandler}
-              photo={product.photo}
-            />
-          ))
-        )}
-      </main>
-    </div>
+    <>
+      <HomeCarosel />
+      <div className="home">
+        {/* <section></section> */}
+        <h1>
+          Latest Products
+          <Link to="/search" className="findmore">
+            More
+          </Link>
+        </h1>
+        <main>
+          {isLoading ? (
+            <SkelatonLoader width="80vw" />
+          ) : (
+            data?.products.map((product, index) => (
+              <ProductCard
+                key={index}
+                productId={product._id}
+                name={product.name}
+                price={product.price}
+                stock={product.stock}
+                handler={addToCartHandler}
+                photo={product.photo}
+              />
+            ))
+          )}
+        </main>
+      </div>
+    </>
   );
 };
 

@@ -22,6 +22,11 @@ export class RouteStrings {
   public static readonly PRODUCT_CATEGORIES: string = "/categories";
   public static readonly ALL_PRODUCTS: string = "/all";
 
+  //PRODUCT CATEGORIES
+  public static readonly NEW_CATEGORY: string = "/category/new";
+  public static readonly ALL_CATEGORIES: string = "/category/all";
+  public static readonly DELETE_CATEGORY: string = "/category/:id";
+
   //ORDER ENDPOINTS
   public static readonly NEW_ORDER: string = "/new";
   public static readonly MY_ORDERS: string = "/my";

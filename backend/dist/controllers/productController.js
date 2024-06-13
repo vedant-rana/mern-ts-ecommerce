@@ -1,10 +1,11 @@
-import { TryCatch } from "../middlewares/errorsMiddleware.js";
-import { Product } from "../models/product.js";
-import ErrorHandler from "../utils/customError.js";
 import { rm } from "fs";
 import { appCache } from "../app.js";
-import { CacheNameStrings } from "../utils/stringConstants/cacheNameStrings.js";
+import { TryCatch } from "../middlewares/errorsMiddleware.js";
+import { Category } from "../models/category.js";
+import { Product } from "../models/product.js";
+import ErrorHandler from "../utils/customError.js";
 import { revalidateCache } from "../utils/revalidateCache.js";
+import { CacheNameStrings } from "../utils/stringConstants/cacheNameStrings.js";
 /**
  * @purpose to get latest product as per created at field
  *
@@ -254,5 +255,74 @@ export const getAllProducts = TryCatch(async (req, res, next) => {
         success: true,
         products,
         totalPage,
+    });
+});
+/**
+ * @purpose to create new product category object in MongoDB
+ *
+ * @param req http request
+ * @param res http response
+ * @param next next function
+ *
+ * @return void
+ */
+export const newCategory = TryCatch(async (req, res, next) => {
+    const { name, createdBy } = req.body;
+    if (!name || !createdBy) {
+        return next(new ErrorHandler("All fields are required", 400));
+    }
+    const categoryExist = await Category.findOne({ name });
+    if (categoryExist) {
+        return next(new ErrorHandler("Category already exist", 400));
+    }
+    const newProduct = await Category.create({
+        name: name.toLowerCase(),
+        createdBy,
+    });
+    // delete all cached products from the cache memory because new product is added
+    revalidateCache({ product: true, admin: true });
+    if (!newProduct)
+        return next(new ErrorHandler("Category creation failed, try again", 500));
+    return res.status(201).json({
+        success: true,
+        message: "Category created successfully",
+    });
+});
+/**
+ * @purpose to get all categories from Category collection
+ *
+ * @param req http request
+ * @param res http response
+ * @param next next function
+ *
+ * @return void
+ */
+export const getAdminCategories = TryCatch(async (req, res, next) => {
+    const categories = await Category.find({}).populate("createdBy", "name");
+    return res.status(200).json({
+        success: true,
+        categories,
+    });
+});
+/**
+ * @purpose to delete a product category object in MongoDB
+ *
+ * @param req http request
+ * @param res http response
+ * @param next next function
+ *
+ * @return void
+ */
+export const deleteCategory = TryCatch(async (req, res, next) => {
+    const id = req.params.id;
+    let category = await Category.findById(id);
+    if (!category)
+        return next(new ErrorHandler("Category id is Invalid", 400));
+    const result = await Category.findByIdAndDelete(id);
+    if (!result)
+        return next(new ErrorHandler("Failed to delete Category", 500));
+    return res.status(200).json({
+        success: true,
+        message: "Category deleted successfully",
     });
 });

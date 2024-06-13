@@ -1,17 +1,22 @@
+import { ConfirmDialog } from "primereact/confirmdialog";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { useSelector } from "react-redux";
-import { UserReducerInitialState } from "../../../types/reducerTypes";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { SkelatonLoader } from "../../../components/Loader";
+import AdminSidebar from "../../../components/admin/AdminSidebar";
 import {
+  useAdminCategoriesQuery,
   useDeleteProductMutation,
   useProductDetailsQuery,
   useUpdateProductMutation,
 } from "../../../redux/api/productApi";
 import { server } from "../../../redux/store";
-import { SkelatonLoader } from "../../../components/Loader";
+import { UserReducerInitialState } from "../../../types/reducerTypes";
+import { confirmDialogBox } from "../../../utils/confirmDialogBox";
 import { responseToast } from "../../../utils/features";
+import toast from "react-hot-toast";
+import { Dropdown } from "primereact/dropdown";
 
 const Productmanagement = () => {
   // getting id of admin from user state of redux which is required to create new product
@@ -25,6 +30,11 @@ const Productmanagement = () => {
   const params = useParams();
   const navigate = useNavigate();
   const { data, isLoading, isError } = useProductDetailsQuery(params.id!);
+  const {
+    isError: categoryError,
+    data: categoryData,
+    isLoading: categoryLoading,
+  } = useAdminCategoriesQuery(user?._id!);
 
   const { name, price, stock, photo, category } = data?.product || {
     _id: "",
@@ -41,6 +51,8 @@ const Productmanagement = () => {
   const [categoryUpdate, setCategoryUpdate] = useState<string>(category);
   const [photoUpdate, setPhotoUpdate] = useState<string>("");
   const [photoFile, setPhotoFile] = useState<File>();
+
+  const [allCategories, setAllCategories] = useState<string[]>([]);
 
   const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = e.target.files?.[0];
@@ -78,13 +90,21 @@ const Productmanagement = () => {
     responseToast(res, navigate, "/admin/product");
   };
 
-  const deleteHandler = async () => {
+  const deleteProductFunction = async () => {
     const res = await deleteProduct({
       userId: user?._id!,
       productId: data?.product._id!,
     });
 
     responseToast(res, navigate, "/admin/product");
+  };
+
+  const deleteHandler = async () => {
+    confirmDialogBox({
+      message: "Are you sure you want to Delete ?",
+      header: "Confirmation",
+      acceptFunction: deleteProductFunction,
+    });
   };
 
   useEffect(() => {
@@ -94,15 +114,22 @@ const Productmanagement = () => {
       setStockUpdate(data.product.stock);
       setCategoryUpdate(data.product.category);
     }
-  }, [data]);
+    if (categoryData && categoryData.categories) {
+      const adminCategoriesData: string[] = categoryData.categories.map(
+        (category) => category.name
+      );
+      setAllCategories(adminCategoriesData);
+    }
+  }, [data, categoryData]);
 
   if (isError) return <Navigate to={"/404"} />;
+  if (categoryError) return toast.error("Unable to find all categories");
 
   return (
     <div className="admin-container">
       <AdminSidebar />
       <main className="product-management">
-        {isLoading ? (
+        {isLoading || categoryLoading ? (
           <SkelatonLoader length={20} />
         ) : (
           <>
@@ -153,11 +180,12 @@ const Productmanagement = () => {
 
                 <div>
                   <label>Category</label>
-                  <input
-                    type="text"
-                    placeholder="eg. laptop, camera etc"
+                  <Dropdown
+                    options={allCategories}
+                    placeholder="Select category"
+                    onChange={(e) => setCategoryUpdate(e.value)}
                     value={categoryUpdate}
-                    onChange={(e) => setCategoryUpdate(e.target.value)}
+                    style={{ padding: "0.7rem", width: "100%" }}
                   />
                 </div>
 
@@ -173,6 +201,7 @@ const Productmanagement = () => {
           </>
         )}
       </main>
+      <ConfirmDialog />
     </div>
   );
 };

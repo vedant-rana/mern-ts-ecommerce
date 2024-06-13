@@ -1,7 +1,7 @@
 import express from "express";
 import { RouteStrings } from "../utils/stringConstants/routeStrings.js";
 import { singleUpload } from "../middlewares/multer.js";
-import { deleteProduct, getAdminProducts, getAllCategories, getAllProducts, getLatestProducts, getSingleProduct, newProduct, updateProductById, } from "../controllers/productController.js";
+import { deleteCategory, deleteProduct, getAdminCategories, getAdminProducts, getAllCategories, getAllProducts, getLatestProducts, getSingleProduct, newCategory, newProduct, updateProductById, } from "../controllers/productController.js";
 import { adminOnly } from "../middlewares/auth.js";
 const router = express.Router();
 /**
@@ -56,4 +56,22 @@ router
  * @route /api/v1/prducts/:id
  */
 router.route(RouteStrings.SINGLE_PRODUCT_ID).delete(adminOnly, deleteProduct);
+/**
+ * @purpose Create new Product Category
+ * @method POST
+ * @route /api/v1/products/category/new
+ */
+router.route(RouteStrings.NEW_CATEGORY).post(adminOnly, newCategory);
+/**
+ * @purpose get all product categories
+ * @method GET
+ * @route /api/v1/products/category/all
+ */
+router.route(RouteStrings.ALL_CATEGORIES).get(adminOnly, getAdminCategories);
+/**
+ * @purpose delete a Product Category (admin only)
+ * @method DELETE
+ * @route /api/v1/prducts/category/:id
+ */
+router.route(RouteStrings.DELETE_CATEGORY).delete(adminOnly, deleteCategory);
 export default router;

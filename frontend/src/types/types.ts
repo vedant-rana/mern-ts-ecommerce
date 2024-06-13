@@ -30,6 +30,31 @@ export type IOrderItem = Omit<ICartItem, "stock"> & {
   _id: string;
 };
 
+export type NewCoupon = {
+  couponCode: string;
+  amount: number;
+};
+
+export type ICoupon = NewCoupon & {
+  _id: string;
+  createdAt: string;
+};
+
+export type ICategory = {
+  _id: string;
+  name: string;
+  createdBy: {
+    name: string;
+    _id: string;
+  };
+  createdAt: string;
+};
+
+export type NewCouponRequest = {
+  couponData: NewCoupon;
+  adminId: string;
+};
+
 export type ShippingInfo = {
   address: string;
   city: string;
@@ -112,4 +137,17 @@ export type IPie = {
   adminUsers: number;
   usersAgeGroup: UsersAgeGroup;
   adminCustomers: { admin: number; customer: number };
+};
+
+export type IBar = {
+  users: number[];
+  products: number[];
+  orders: number[];
+};
+
+export type ILine = {
+  users: number[];
+  products: number[];
+  discount: number[];
+  revenue: number[];
 };

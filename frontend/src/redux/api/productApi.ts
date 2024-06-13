@@ -1,9 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
+  AllCategoryResponse,
   AllProductResponse,
   CategoriesResponse,
+  DeleteCategoryRequest,
   DeleteProductRequest,
   MessageResponse,
+  NewCategoryRequest,
   NewProductRequest,
   ProductResponse,
   SearchProductRequest,
@@ -16,7 +19,7 @@ export const productApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_SERVER}/api/v1/products/`,
   }),
-  tagTypes: ["product"],
+  tagTypes: ["product", "category"],
   endpoints: (builder) => ({
     latestProducts: builder.query<AllProductResponse, string>({
       query: () => "latest",
@@ -77,6 +80,28 @@ export const productApi = createApi({
       }),
       invalidatesTags: ["product"],
     }),
+
+    createCategory: builder.mutation<MessageResponse, NewCategoryRequest>({
+      query: (data: NewCategoryRequest) => ({
+        url: `category/new?id=${data.createdBy}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["category"],
+    }),
+
+    adminCategories: builder.query<AllCategoryResponse, string>({
+      query: (id) => `category/all?id=${id}`,
+      providesTags: ["category"],
+    }),
+
+    deleteCategory: builder.mutation<MessageResponse, DeleteCategoryRequest>({
+      query: ({ adminId, categoryId }) => ({
+        url: `category/${categoryId}?id=${adminId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["category"],
+    }),
   }),
 });
 
@@ -89,4 +114,7 @@ export const {
   useProductDetailsQuery,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useCreateCategoryMutation,
+  useAdminCategoriesQuery,
+  useDeleteCategoryMutation,
 } = productApi;

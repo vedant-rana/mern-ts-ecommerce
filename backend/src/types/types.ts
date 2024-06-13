@@ -23,6 +23,11 @@ export interface NewProductRequestBody {
   category: string;
 }
 
+export interface NewCategoryRequestBody {
+  name: string;
+  createdBy: string;
+}
+
 export type SearchRequestQueryType = {
   search?: string;
   price?: string;

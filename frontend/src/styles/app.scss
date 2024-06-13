@@ -38,12 +38,14 @@ $color3: rgb(0, 104, 136);
 @import "home";
 @import "cart";
 @import "shipping";
+@import "loader";
 @import "login";
 @import "search";
 
 // Admin styles imported from here
 @import "admin-styles/dashboard";
 @import "admin-styles/products";
+@import "admin-styles/category";
 @import "admin-styles/chart";
 @import "admin-styles/dashboardapp";
 @import "admin-styles/mediaquery";
@@ -324,4 +326,52 @@ $color3: rgb(0, 104, 136);
   100% {
     opacity: 0.6;
   }
+}
+
+// .custom-confirm-dialog {
+//   height: 15vh;
+//   width: 25vw;
+// }
+
+.p-dialog-header {
+  padding: 1rem;
+}
+
+.p-dialog-content {
+  padding: 0 1rem;
+}
+
+.p-confirm-dialog-message {
+  margin-left: 0.7rem;
+}
+
+.p-dialog-footer {
+  padding: 1rem;
+}
+
+.p-button {
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+}
+
+.p-carousel-container {
+  position: relative;
+}
+.p-carousel-next,
+.p-carousel-prev {
+  position: absolute;
+  // top: 50%;
+  // left: 0;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.p-carousel-prev {
+  top: 50%;
+  left: 0;
+}
+
+.p-carousel-next {
+  top: 50%;
+  right: 0;
 }

@@ -9,5 +9,7 @@ const couponSchema = new mongoose.Schema({
         type: Number,
         required: [true, "Please enter the Discount Amount"],
     },
+}, {
+    timestamps: true,
 });
 export const Coupon = mongoose.model("Coupon", couponSchema);

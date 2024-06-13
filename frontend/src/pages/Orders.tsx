@@ -24,7 +24,7 @@ const column: Column<DataType>[] = [
   { Header: "Discount", accessor: "discount" },
   { Header: "Amount", accessor: "amount" },
   { Header: "Status", accessor: "status" },
-  { Header: "Action", accessor: "action" },
+  // { Header: "Action", accessor: "action" },
 ];
 
 const Orders = () => {
@@ -39,7 +39,7 @@ const Orders = () => {
     if (data) {
       setRows(
         data.orders.map((product) => ({
-          _id: product.user.name,
+          _id: product._id,
           amount: product.total,
           discount: product.discount,
           quantity: product.orderItems.length,

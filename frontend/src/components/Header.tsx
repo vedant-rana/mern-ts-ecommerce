@@ -50,7 +50,7 @@ const Header = ({ user }: HeaderPropType) => {
           <button onClick={() => setIsDialogOpen((prev) => !prev)}>
             <FaUser />
           </button>
-          <dialog open={isDialogOpen}>
+          <dialog open={isDialogOpen} style={{ zIndex: 10 }}>
             <div>
               {user?.role === "admin" && (
                 <Link

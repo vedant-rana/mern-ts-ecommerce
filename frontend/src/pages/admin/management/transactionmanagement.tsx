@@ -1,17 +1,18 @@
 import { FaTrash } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { SkelatonLoader } from "../../../components/Loader";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import {
   useDeleteOrderMutation,
   useOrderDetailsQuery,
   useUpdateOrderMutation,
 } from "../../../redux/api/orderApi";
-import { server } from "../../../redux/store";
-import { UserReducerInitialState } from "../../../types/reducerTypes";
+import { RootState, server } from "../../../redux/store";
 import { IOrder, IOrderItem } from "../../../types/types";
-import { SkelatonLoader } from "../../../components/Loader";
 import { responseToast } from "../../../utils/features";
+import { confirmDialogBox } from "../../../utils/confirmDialogBox";
+import { ConfirmDialog } from "primereact/confirmdialog";
 
 const defaultData: IOrder = {
   shippingInfo: {
@@ -36,9 +37,7 @@ const defaultData: IOrder = {
 };
 
 const TransactionManagement = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const { user } = useSelector((state: RootState) => state.userReducer);
   const params = useParams();
   const navigate = useNavigate();
 
@@ -67,12 +66,20 @@ const TransactionManagement = () => {
     responseToast(res, navigate, "/admin/transaction");
   };
 
-  const deleteHandler = async () => {
+  const deleteTransactionFunction = async () => {
     const res = await deleteOrder({
       orderId: data?.order._id!,
       userId: user?._id!,
     });
     responseToast(res, navigate, "/admin/transaction");
+  };
+
+  const deleteHandler = async () => {
+    confirmDialogBox({
+      message: "Are you sure you want to Delete ?",
+      header: "Confirmation",
+      acceptFunction: deleteTransactionFunction,
+    });
   };
 
   if (isError) return <Navigate to={"/404"} />;
@@ -96,7 +103,7 @@ const TransactionManagement = () => {
                 <ProductCard
                   key={i._id}
                   name={i.name}
-                  photo={`${server}/${i.photo}`}
+                  photo={i.photo}
                   productId={i.productId}
                   _id={i._id}
                   quantity={i.quantity}
@@ -145,6 +152,7 @@ const TransactionManagement = () => {
           </>
         )}
       </main>
+      <ConfirmDialog />
     </div>
   );
 };

@@ -49,7 +49,7 @@ interface DataType {
 
 const columns: Column<DataType>[] = [
   {
-    Header: "Avatar",
+    Header: "Customer",
     accessor: "user",
   },
   {

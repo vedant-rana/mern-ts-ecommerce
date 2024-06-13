@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 import Loader from "../../../components/Loader";
 import AdminSidebar from "../../../components/admin/AdminSidebar";
 import { DoughnutChart, PieChart } from "../../../components/admin/Charts";
@@ -19,7 +20,10 @@ const PieCharts = () => {
   const ageGroup = data?.charts.usersAgeGroup!;
   const adminCustomers = data?.charts.adminCustomers!;
 
-  if (isError) toast.error((error as CustomError).data.message);
+  if (isError) {
+    toast.error((error as CustomError).data.message);
+    return <Navigate to="/admin/dashboard" />;
+  }
 
   return (
     <div className="admin-container">

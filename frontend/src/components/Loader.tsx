@@ -1,5 +1,12 @@
 const Loader = () => {
-  return <div>Loading ...</div>;
+  return (
+    <div className="lds-ring">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  );
 };
 
 interface SkeletonProps {
